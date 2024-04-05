@@ -26,7 +26,7 @@ const AppContext = createContext<AppContextProps | undefined>(undefined);
 
 const AppContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 
-    const API_SERVER = 'http://' + window.location.hostname + ':8000/';
+    const API_SERVER = window.location.hostname.startsWith('cbsc-app') ? 'https://'+window.location.hostname+'/' : 'http://' + window.location.hostname + ':8000/';
     const API = API_SERVER + 'api/';
 
     const [user, setUser] = useState(null);

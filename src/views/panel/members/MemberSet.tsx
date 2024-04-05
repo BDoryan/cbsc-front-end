@@ -3,11 +3,16 @@ import React, {useEffect, useRef, useState} from 'react';
 import {Link, RouteComponentProps, useParams} from 'react-router-dom';
 import {useAppContext} from "../../context/AppContext";
 import axios from "axios";
+import {useDialog} from "../../context/DialogContext";
+import ConfirmDialog from "../dialog/ConfirmDialog";
+import InfoDialog from "../dialog/InfoDialog";
 
 const MemberSet: React.FC<RouteComponentProps<{}>> = () => {
 
-    const [loading, setLoading] = useState(false);
+    const { setDialog } = useDialog();
     const {API, toResource, token_session, addNotification, getUserById} = useAppContext();
+
+    const [loading, setLoading] = useState(false);
     const {id} = useParams();
     const [user, setUser] = useState<any | boolean>(false);
     const [roles, setRoles] = useState([]);
@@ -154,6 +159,84 @@ const MemberSet: React.FC<RouteComponentProps<{}>> = () => {
             }
         }
     };
+
+    const deleteUser = () => {
+        setDialog(
+            <ConfirmDialog confirm={{
+                color: 'red',
+                onclick: async () => {
+                    // post await /user/login with email and password with axios (wait response to return success or not)
+                    try {
+                        const response = await axios.delete(`${API}users/${user.id}`, {
+                            headers: {
+                                'Authorization': 'Bearer ' + token_session
+                            }
+                        });
+
+                        if (response.status === 200) {
+                            addNotification('Suppression', 'Le membre a été supprimé avec succès', 'success');
+                            setUser(null);
+
+                            window.location.href = '/members';
+                        } else {
+                            addNotification('Erreur', 'Une erreur est survenue lors de la suppression du membre', 'error');
+                        }
+                    } catch (error) {
+                        console.error(error);
+                        addNotification('Erreur', 'Une erreur est survenue lors de la suppression du membre', 'error');
+                    }
+                },
+                text: 'Je confirme la suppression',
+            }}
+                           cancel={{
+                               color: 'white',
+                               text: 'Annuler',
+                               onclick: () => {
+
+                               }
+                           }}
+                           title={"Suppression de : "+user.firstname + ' '+user.lastname}
+                           content={"Voulez-vous vraiment confirmer la suppression de ce membre ?"}
+            />
+        );
+    }
+
+    const generateQrCode = async () => {
+        // post await /user/login with email and password with axios (wait response to return success or not)
+        try {
+            const response = await axios.get(`${API}users/${user.id}/generate/token`, {
+                headers: {
+                    'Authorization': 'Bearer ' + token_session
+                }
+            });
+
+            if (response.status === 200) {
+                setDialog(
+                    <InfoDialog
+                        close={{
+                            color: 'white',
+                            text: 'Terminer',
+                            onclick: () => {
+
+                            }
+                        }}
+                        title={"QrCode de connexion pour : "+user.firstname + ' '+user.lastname}
+                        content={"Attention, ce QRCode doit être uniquement transmis à la personne concernée. Il lui permettra de se connecter à son compte sans avoir à saisir de mot de passe."}
+
+                    >
+                        <div className="w-full py-5 flex align-center justify-center object-contain">
+                            <img src={"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="+response.data.token} alt=""/>
+                        </div>
+                    </InfoDialog>
+                );
+            } else {
+                addNotification('Erreur', 'Une erreur est survenue lors de la génération du QRCode', 'error');
+            }
+        } catch (error) {
+            console.error(error);
+            addNotification('Erreur', 'Une erreur est survenue lors de la génération du QRCode', 'error');
+        }
+    }
 
     return (
         <>
@@ -342,19 +425,35 @@ const MemberSet: React.FC<RouteComponentProps<{}>> = () => {
                             })
                         }
 
-                        <div>
-                            {!user && (
+
+                        {!user && (
                                 <p className="text-muted text-sm italic text-gray-500 my-3">
                                     Lorsque vous aurez terminer la création de ce compte l'utilisateur recevra ses accès
                                     dans sa boîte mail, sinon vous aurez la possibilité de l'aider à se connecter avec
                                     un QRCode.
                                 </p>
+                            )
+                        }
+                            <div className={'flex lg:flex-row flex-col gap-3'}>
+                            {user && (
+                                <>
+                                    <button onClick={deleteUser} type="button"
+                                            className="flex gap-1 w-full items-center justify-center rounded-md bg-red-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                        <i className="fa-solid fa-trash"></i>
+                                        Supprimer le compte
+                                    </button>
+                                    <button onClick={generateQrCode} type="button"
+                                            className="flex gap-1 w-full items-center justify-center rounded-md bg-blue-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600">
+                                        <i className="fa-solid fa-qrcode"></i>
+                                        Connexion rapide
+                                    </button>
+                                </>
                             )}
-                            <button type="submit"
-                                    className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                <i className="fa-solid f"></i>
-                                {user ? "Modifier le compte" : "Créer le compte"}
-                            </button>
+                                <button type="submit"
+                                        className="flex gap-1 w-full items-center justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                                    <i className="fa-solid fa-pen"></i>
+                                    {user ? "Modifier le compte" : "Créer le compte"}
+                                </button>
                         </div>
                     </form>
                 </>

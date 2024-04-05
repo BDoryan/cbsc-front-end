@@ -25,7 +25,7 @@ const Members: React.FC<RouteComponentProps<{}>> = () => {
         }
 
         return () => {
-            hasRun.current = false;
+            // hasRun.current = false;
             setMembers([])
         }
     }, []); // Reload members when search term changes

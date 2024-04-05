@@ -7,9 +7,10 @@ const SignIn = () => {
     const {login, logged, loginWithToken} = useAppContext();
     const [useQrCode, setUseQrCode] = useState(false);
     const [qrCodeStatus, setQrCodeStatus] = useState();
+    const [cameraFacingMode, setCameraFacingMode] = useState("environment"); // Par défaut sur la caméra arrière
 
     const detectQrCode = async (data) => {
-        if(logged) return;
+        if (logged) return;
 
         setQrCodeStatus('Tentative de capture de donnée.')
         console.log('try')
@@ -44,6 +45,10 @@ const SignIn = () => {
         console.log(r);
     }
 
+    const toggleCameraFacingMode = () => {
+        setCameraFacingMode(prevMode => prevMode === "environment" ? "user" : "environment");
+    }
+
 // @ts-ignore
     return (
         <>
@@ -57,6 +62,7 @@ const SignIn = () => {
                                 style={{width: '100%'}}
                                 onError={(err) => console.error(err)}
                                 onResult={detectQrCode}
+                                constraints={ {facingMode: cameraFacingMode}} // Utilise la valeur de la caméra sélectionnée
                             />
                         </div>
                         <p className="text-gray-500 text-sm pt-5 text-center">{!errorMessage ? qrCodeStatus : ''}</p>
@@ -68,6 +74,11 @@ const SignIn = () => {
                                 Utiliser votre adresse e-mail
                             </button>
                         </p>
+                        {/* Ajouter le bouton de commutation entre les caméras */}
+                        {/*<button onClick={toggleCameraFacingMode}*/}
+                        {/*        className="mt-3 px-4 py-2 rounded-md bg-indigo-600 text-white font-semibold hover:bg-indigo-500">*/}
+                        {/*    Basculer caméra ({cameraFacingMode === 'environment' ? 'Avant' : 'Arrière'})*/}
+                        {/*</button>*/}
                     </div>
                 </>
             ) : (
