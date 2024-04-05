@@ -81,6 +81,27 @@ const AppContextProvider: React.FC<{ children: ReactNode }> = ({children}) => {
 
     useEffect(() => {
         loadUser();
+
+        const handleVisibilityChange = () => {
+            if (document.visibilityState === 'visible') {
+                loadUser();
+            }
+        };
+
+        const handleWindowFocus = () => {
+            if (document.visibilityState === 'visible') {
+                // alert('test');
+                loadUser();
+            }
+        };
+
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        window.addEventListener('focus', handleWindowFocus);
+
+        return () => {
+            document.removeEventListener('visibilitychange', handleVisibilityChange);
+            window.removeEventListener('focus', handleWindowFocus);
+        };
     }, []);
 
     const loginWithToken = async (token: string) => {

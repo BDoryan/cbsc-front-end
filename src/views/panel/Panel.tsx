@@ -56,11 +56,15 @@ const Panel: React.FC<PanelProps> = ({}) => {
                                                     <span className="ml-3 text-sm font-medium">Liste des membres</span>
                                                 </Link>
 
-                                                <Link onClick={() => toggleSidebar()} to="/members/new"
-                                                      className="flex items-center rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
-                                                    <i className="w-4 fa-solid fa-user-plus"></i>
-                                                    <span className="ml-3 text-sm font-medium">Nouveau membre</span>
-                                                </Link>
+                                                {
+                                                    imManager() && (
+                                                        <Link onClick={() => toggleSidebar()} to="/members/new"
+                                                              className="flex items-center rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
+                                                            <i className="w-4 fa-solid fa-user-plus"></i>
+                                                            <span className="ml-3 text-sm font-medium">Nouveau membre</span>
+                                                        </Link>
+                                                    )
+                                                }
                                             </nav>
                                         </details>
                                         <details
@@ -91,7 +95,8 @@ const Panel: React.FC<PanelProps> = ({}) => {
                                                 <Link onClick={() => toggleSidebar()} to="/convocations/new"
                                                       className="flex items-center rounded-lg px-4 py-2 text-gray-500 hover:bg-gray-100 hover:text-gray-700">
                                                     <i className="w-4 fa-solid fa-plus-circle"></i>
-                                                    <span className="ml-3 text-sm font-medium">Créer une convocation</span>
+                                                    <span
+                                                        className="ml-3 text-sm font-medium">Créer une convocation</span>
                                                 </Link>
                                             </nav>
                                         </details>

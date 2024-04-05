@@ -6,8 +6,8 @@ import {useAppContext} from "../../context/AppContext";
 
 const ConvocationSet: React.FC<RouteComponentProps<{}>> = () => {
 
-    const { API, addNotification, token_session} = useAppContext();
-    const { id } = useParams();
+    const {API, addNotification, token_session} = useAppContext();
+    const {id} = useParams();
     const [convocation, setConvocation] = useState<any>({});
     const [errors, setErrors] = useState([]);
     const [members, setMembers] = useState([]);
@@ -106,7 +106,7 @@ const ConvocationSet: React.FC<RouteComponentProps<{}>> = () => {
         // add invitations[] to the formData
         invitations.forEach((invitation: number) => {
             console.log(invitation)
-            formData.append('invitations[]', invitation+'');
+            formData.append('invitations[]', invitation + '');
         });
 
         if (id)
@@ -168,36 +168,63 @@ const ConvocationSet: React.FC<RouteComponentProps<{}>> = () => {
     return (
         <>
             <h1 className="text-2xl mb-2 font-bold">Création de la convocation</h1>
-            <hr className="my-5" />
+            <hr className="my-5"/>
 
             <form onSubmit={handleSubmit} className="space-y-6" action="#" method="POST">
                 <div>
-                    <label htmlFor="title" className="block text-sm font-medium leading-6 text-gray-900">Titre de la convocation</label>
+                    <label htmlFor="title" className="block text-sm font-medium leading-6 text-gray-900">Titre de la
+                        convocation</label>
                     <div className="mt-2">
-                        <input defaultValue={convocation.title ?? ''} id="title" name="title" type="text" autoComplete="title" required className="block w-full px-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                        <input defaultValue={convocation.title ?? ''} id="title" name="title" type="text"
+                               autoComplete="title" required
+                               className="block w-full px-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                         {errors['title'] && (
                             <p className="text-red-500 text-sm">{errors['title']}</p>
                         )}
                     </div>
                 </div>
                 <div>
-                    <label htmlFor="content" className="block text-sm font-medium leading-6 text-gray-900">Message de la convocation</label>
+                    <label htmlFor="content" className="block text-sm font-medium leading-6 text-gray-900">Message de la
+                        convocation</label>
                     <div className="mt-2">
-                        <textarea defaultValue={convocation.content ?? ''} rows={4} id="content" name="content" autoComplete="content" required className="block w-full px-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6" />
+                        <textarea defaultValue={convocation.content ?? ''} rows={4} id="content" name="content"
+                                  autoComplete="content" required
+                                  className="block w-full px-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"/>
                         {errors['content'] && (
                             <p className="text-red-500 text-sm">{errors['content']}</p>
                         )}
                     </div>
                 </div>
                 <div>
-                    <label htmlFor="datetime" className="block text-sm font-medium leading-6 text-gray-900">Date de la convocation</label>
+                    <label htmlFor="datetime" className="block text-sm font-medium leading-6 text-gray-900">Date de la
+                        convocation</label>
                     <div className="mt-2">
-                        <div className="relative h-9 block w-full px-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
-                            <input value={current_datetime} onChange={(e) => setCurrentDatetime(e.target.value)} className="absolute bg-transparent px-3 top-0 left-0 w-full h-full" id="datetime" name="datetime" type="datetime-local" autoComplete="birthday" required />
+                        <div
+                            className="relative h-9 block w-full px-3 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
+                            <input value={current_datetime} onChange={(e) => setCurrentDatetime(e.target.value)}
+                                   className="absolute bg-transparent px-3 top-0 left-0 w-full h-full" id="datetime"
+                                   name="datetime" type="datetime-local" autoComplete="birthday" required/>
                         </div>
                         {errors['datetime'] && (
                             <p className="text-red-500 text-sm">{errors['datetime']}</p>
                         )}
+                    </div>
+                </div>
+                {/* a button to select all*/}
+                <div className="flex flex-col gap-2 pt-5">
+                    <button onClick={(e) => {
+                        e.preventDefault();
+                        setInvitations(members.map((member: any) => member.id));
+                    }}
+                            className="w-full bg-indigo-800 p-3 text-sm font-semibold text-white hover:text-gray-200 hover:bg-indigo-700">Sélectionner tous les membres
+                    </button>
+                    <div>
+                        <button onClick={(e) => {
+                            e.preventDefault();
+                            setInvitations([]);
+                        }}
+                                className="w-full bg-indigo-800 p-3 text-sm font-semibold text-white hover:text-gray-200 hover:bg-indigo-700">Désélectionner toutes les sélections
+                        </button>
                     </div>
                 </div>
                 <div className={'overflow-y-auto h-[300px] py-2 border-[1px] border-gray-300 rounded-md shadow-sm'}>
@@ -217,7 +244,8 @@ const ConvocationSet: React.FC<RouteComponentProps<{}>> = () => {
                                                     return prevInvitations.filter((id: number) => id !== member.id);
                                                 }
                                             })
-                                        } checked={invitations.includes(member.id) ?? false} type="checkbox" className={"h-[16px] w-[16px] "}  />
+                                        } checked={invitations.includes(member.id) ?? false} type="checkbox"
+                                               className={"h-[16px] w-[16px] "}/>
                                     </div>
                                 </div>
                             )
@@ -226,9 +254,11 @@ const ConvocationSet: React.FC<RouteComponentProps<{}>> = () => {
                 </div>
                 <div>
                     <p className="text-muted text-sm italic text-gray-500 mb-3">
-                        Lorsqu'on vous aurez terminé la création de votre convocation, une notification sera envoyé à tous les membres de l'association.
+                        Lorsqu'on vous aurez terminé la création de votre convocation, une notification sera envoyé à
+                        tous les membres de l'association.
                     </p>
-                    <button type="submit" className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+                    <button type="submit"
+                            className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
                         <i className="fa-solid f"></i>
                         {
                             id ? 'Modifier la convocation' : 'Créer la convocation'
