@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { useParams} from 'react-router-dom';
+import {useParams} from 'react-router-dom';
 import axios from "axios";
 import {useAppContext} from "../../context/AppContext";
 
@@ -50,7 +50,8 @@ const ConvocationView: any = () => {
                         {convocation.content ?? ''}
                     </p>
                     <p className="text-sm text-gray-600 mt-10">
-                        <span className="text-indigo-600">{convocation?.invitations.length ?? 0} membre(s)</span> ont été
+                        <span className="text-indigo-600">{convocation?.invitations.length ?? 0} membre(s)</span> ont
+                        été
                         convié(s) à cet événement.<br/>
                         <span className="text-gray-600">Le <span
                             className="text-indigo-600">{new Date(convocation.datetime).toLocaleString()}</span></span>
@@ -68,8 +69,11 @@ const ConvocationView: any = () => {
                                 <div key={index} className="flex items-center shadow p-3 rounded-2xl">
                                     <img className="w-10 h-10 object-cover rounded-full shadow-2xl"
                                          src={toResource(invitation.user.picture) ?? ''}
-                                         alt="Person 1"/>
+                                         alt=" "/>
                                     <h3 className="text-lg font-medium text-gray-900 ms-2 me-auto">{invitation.user.firstname + ' ' + invitation.user.lastname}</h3>
+                                    <p className="text-sm text-gray-600 mx-2">{
+                                        new Date(invitation.responded_at).toLocaleString()
+                                    }</p>
                                     <i className={`fa-solid fa-${getStatus(invitation)} me-1 text-${getStatus(invitation) === 'check-circle' ? 'green' : getStatus(invitation) === 'circle-xmark' ? 'red' : 'gray'}-700`}></i>
                                 </div>
                             ))

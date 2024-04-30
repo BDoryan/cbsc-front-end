@@ -352,13 +352,13 @@ const MemberSet: React.FC<RouteComponentProps<{}>> = () => {
                         <div>
                             <label htmlFor="sex-select"
                                    className="block text-sm font-medium leading-6 text-gray-900">Sexe</label>
-                            <div className="mt-2">
+                                <div className="mt-2">
                                 <div
                                     className="block relative h-9 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6">
                                     <select id="sex-select" name="sex"
                                             className="absolute px-3 bg-transparent top-0 left-0 w-full h-full bg-red-700">
                                         {
-                                            user.role == "W" ? (
+                                            user.sex == "W" ? (
                                                 <>
                                                     <option value="W">Femme</option>
                                                     <option value="M">Homme</option>
