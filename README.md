@@ -1,99 +1,121 @@
 # CBSC Application
 
-Application web (PWA) pour simplifier la gestion du Club Bouliste Saint Couatais.
+Web application (PWA) designed to simplify the management of the Club Bouliste Saint Couatais.
 
-## Objectif
-Centraliser la gestion des membres et des convocations, avec un accès rapide (email/mot de passe ou QR code) et des notifications push.
+## Objective
 
-## Fonctionnalites principales
-- Authentification par email/mot de passe ou QR code.
-- Tableau de bord avec navigation par role (membre ou bureau).
-- Gestion des membres (liste, recherche, creation, edition, suppression).
-- Gestion des convocations (creation, edition, suppression, suivi des reponses).
-- Notifications push et toasts internes.
+Centralize member and event (convocation) management, with quick access (email/password or QR code) and push notifications.
 
-## Parcours utilisateur
-- Connexion via [src/views/SignIn.jsx](src/views/SignIn.jsx) (email/mot de passe ou QR code).
-- Tableau de bord et navigation principale dans [src/views/panel/Panel.tsx](src/views/panel/Panel.tsx).
-- Accueil avec actions rapides et abonnement push dans [src/views/panel/Home.tsx](src/views/panel/Home.tsx).
+## Main Features
+
+* Authentication via email/password or QR code
+* Dashboard with role-based navigation (member or admin)
+* Member management (list, search, create, edit, delete)
+* Convocation management (create, edit, delete, response tracking)
+* Push notifications and in-app toasts
+
+## User Flow
+
+* Login via [src/views/SignIn.jsx](src/views/SignIn.jsx) (email/password or QR code)
+* Dashboard and main navigation in [src/views/panel/Panel.tsx](src/views/panel/Panel.tsx)
+* Home with quick actions and push subscription in [src/views/panel/Home.tsx](src/views/panel/Home.tsx)
 
 ## Roles
-Le contexte applicatif distingue les profils suivants:
-- Membre: acces aux convocations et a la liste des membres.
-- Bureau (managing): gestion complete des membres et des convocations.
 
-La logique est dans [src/views/context/AppContext.tsx](src/views/context/AppContext.tsx).
+The application defines the following roles:
 
-## Routes principales
-Le routeur est defini dans [src/AppRouter.jsx](src/AppRouter.jsx).
-- `/signin`: connexion.
-- `/signup`: creation de compte (UI en place, pas de logique API pour l'instant).
-- `/`: tableau de bord (layout `Panel`).
-	- `/members`: liste des membres.
-	- `/members/new`: creation d'un membre.
-	- `/members/edit/:id`: edition d'un membre.
-	- `/competitions`: espace competitions (stub).
-	- `/convocations`: liste/gestion des convocations.
-	- `/convocations/new`: creation d'une convocation.
-	- `/convocations/edit/:id`: edition d'une convocation.
-	- `/convocations/:id`: details et suivi des reponses.
+* Member: access to convocations and member list
+* Admin (managing): full management of members and convocations
 
-## API et authentification
-Le client utilise Axios et un token JWT stocke dans `localStorage`.
+Logic is handled in [src/views/context/AppContext.tsx](src/views/context/AppContext.tsx).
 
-Le serveur est derive automatiquement:
-- Si l'hote commence par `cbsc-app`, l'API est `https://<host>/api/`.
-- Sinon, l'API est `http://<host>:8000/api/`.
+## Main Routes
 
-Endpoints principaux (consommes par le front):
-- Auth: `user/login`, `user/me`, `user/logout`.
-- Membres: `users`, `users/search`, `users/all`, `users/:id`, `users/:id/generate/token`.
-- Convocations: `convocations`, `convocations/search`, `convocations/:id`, `convocations/:id/accept`, `convocations/:id/decline`.
-- Push: `subscribe`.
+The router is defined in [src/AppRouter.jsx](src/AppRouter.jsx).
 
-## Notifications et dialogs
-- Toasts temporaires dans [src/views/panel/notifications/Notification.tsx](src/views/panel/notifications/Notification.tsx).
-- Dialogs de confirmation/information via [src/views/context/DialogContext.tsx](src/views/context/DialogContext.tsx).
+* `/signin`: login
+* `/signup`: account creation (UI only, no API logic yet)
+* `/`: dashboard (layout `Panel`)
 
-## PWA et push notifications
-- Service worker enregistre dans [src/index.js](src/index.js) (fichier: [public/service-worker.js](public/service-worker.js)).
-- Abonnement push et permissions dans [src/views/panel/Home.tsx](src/views/panel/Home.tsx).
+  * `/members`: member list
+  * `/members/new`: create member
+  * `/members/edit/:id`: edit member
+  * `/competitions`: competitions section (stub)
+  * `/convocations`: convocations list/management
+  * `/convocations/new`: create convocation
+  * `/convocations/edit/:id`: edit convocation
+  * `/convocations/:id`: details and response tracking
 
-## Structure du projet
-- [src/](src/): code React.
-	- [src/views/](src/views/): ecrans et composants principaux.
-	- [src/views/context/](src/views/context/): contextes app et dialogs.
-	- [src/views/panel/](src/views/panel/): pages du tableau de bord.
-- [public/](public/): fichiers publics et service worker.
+## API and Authentication
 
-## Stack technique
-- React 18 (CRA)
-- React Router v6
-- Tailwind CSS
-- Axios
-- react-qr-reader
+The client uses Axios and a JWT token stored in `localStorage`.
 
-## Lancer le projet
-Installer les dependances:
+The server is automatically determined:
+
+* If the host starts with `cbsc-app`, the API is `https://<host>/api/`
+* Otherwise, the API is `http://<host>:8000/api/`
+
+Main endpoints (used by the frontend):
+
+* Auth: `user/login`, `user/me`, `user/logout`
+* Members: `users`, `users/search`, `users/all`, `users/:id`, `users/:id/generate/token`
+* Convocations: `convocations`, `convocations/search`, `convocations/:id`, `convocations/:id/accept`, `convocations/:id/decline`
+* Push: `subscribe`
+
+## Notifications and Dialogs
+
+* Temporary toasts in [src/views/panel/notifications/Notification.tsx](src/views/panel/notifications/Notification.tsx)
+* Confirmation/information dialogs via [src/views/context/DialogContext.tsx](src/views/context/DialogContext.tsx)
+
+## PWA and Push Notifications
+
+* Service worker registered in [src/index.js](src/index.js) (file: [public/service-worker.js](public/service-worker.js))
+* Push subscription and permissions handled in [src/views/panel/Home.tsx](src/views/panel/Home.tsx)
+
+## Project Structure
+
+* [src/](src/): React code
+
+  * [src/views/](src/views/): main screens and components
+  * [src/views/context/](src/views/context/): app and dialog contexts
+  * [src/views/panel/](src/views/panel/): dashboard pages
+* [public/](public/): public files and service worker
+
+## Tech Stack
+
+* React 18 (CRA)
+* React Router v6
+* Tailwind CSS
+* Axios
+* react-qr-reader
+
+## Run the Project
+
+Install dependencies:
+
 ```bash
 npm install
 ```
 
-Demarrer en local:
+Run locally:
+
 ```bash
 npm start
 ```
 
-Build de production:
+Production build:
+
 ```bash
 npm run build
 ```
 
 Tests:
+
 ```bash
 npm test
 ```
 
 ## Notes
-- Le formulaire d'inscription [src/views/SignUp.tsx](src/views/SignUp.tsx) et l'ecran [src/views/RegisterClub.tsx](src/views/RegisterClub.tsx) sont des squelettes UI sans logique API.
-- La gestion des competitions est un placeholder dans [src/views/panel/competitions/Competitions.tsx](src/views/panel/competitions/Competitions.tsx).
+
+* The signup form [src/views/SignUp.tsx](src/views/SignUp.tsx) and the screen [src/views/RegisterClub.tsx](src/views/RegisterClub.tsx) are UI-only placeholders without API logic
+* The competitions feature is a placeholder in [src/views/panel/competitions/Competitions.tsx](src/views/panel/competitions/Competitions.tsx)
